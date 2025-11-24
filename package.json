@@ -1,0 +1,13 @@
+{
+  "name": "goplaces",
+  "version": "1.0.0",
+  "description": "GoPlaces - Instagrammable Image Generator",
+  "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
+

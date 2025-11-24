@@ -1,0 +1,408 @@
+#root {
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.map-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 500;
+  pointer-events: none;
+  transition: opacity 0.8s ease-out;
+  opacity: 1;
+}
+
+.map-overlay.hidden {
+  opacity: 0;
+}
+
+.search-container {
+  position: absolute;
+  left: 50%;
+  z-index: 1000;
+  width: 90%;
+  max-width: 500px;
+  transition: top 0.8s cubic-bezier(0.4, 0.0, 0.2, 1), 
+              transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.search-container.center {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.search-container.top {
+  top: 20px;
+  transform: translateX(-50%);
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 16px;
+}
+
+.search-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #000;
+}
+
+/* Google Maps Autocomplete dropdown styling */
+.pac-container {
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.pac-item {
+  padding: 10px 12px;
+  border: none;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.pac-item:hover {
+  background-color: #f5f5f5;
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-item-query {
+  font-size: 14px;
+  color: #333;
+}
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+}
+
+.popup-content {
+  width: 320px;
+  background: white;
+  color: #333;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  background: #f9fafb;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #666;
+}
+
+.location-info {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.location-info:hover {
+  background: #e0e0e0;
+}
+
+.upload-section {
+  margin: 16px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  width: 288px;
+  height: 288px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-section.loading {
+  cursor: not-allowed;
+}
+
+.upload-section:hover {
+  border-color: #646cff;
+  background: #f5f5ff;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #888;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.file-preview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.file-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.delete-image-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.delete-image-btn:hover {
+  background: rgba(220, 38, 38, 0.95);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.change-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  font-size: 12px;
+  padding: 4px;
+  text-align: center;
+}
+
+.time-selector {
+  padding: 0 16px;
+}
+
+.time-selector p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.button-group button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: #333;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-group button:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.button-group button.active {
+  background: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+.generate-btn {
+  margin: 16px;
+  padding: 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  overflow: hidden;
+  position: relative;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.result-section {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.generated-img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.reset-btn {
+  padding: 8px;
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error-msg {
+  color: red;
+  font-size: 12px;
+  text-align: center;
+  margin: 0 16px 16px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(79, 70, 229, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.airplane-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.flying-large {
+  animation: flying-large 2.5s linear infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes flying-large {
+  0% { 
+    transform: translateX(-180px) rotate(45deg);
+  }
+  100% { 
+    transform: translateX(180px) rotate(45deg);
+  }
+}

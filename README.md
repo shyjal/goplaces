@@ -2,6 +2,8 @@
 
 An AI-powered web application that generates realistic, Instagram-worthy photos of you at any location in the world. Simply upload your photo, select a location on the map, and let AI place you there!
 
+![GoPlaces Example](example.jpeg)
+
 ## 🎯 Use Case
 
 Ever wanted to share photos from exotic locations without actually traveling? GoPlaces makes it possible by:
